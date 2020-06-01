@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link href="../lunasspecto.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, intiial-scale=1" />
+    <title>hamster.dance guestbook</title>
+  </head>
+  <body>
+    <h1>hamster.dance guestbook</h1>
+    <form action="./submit/" method="post">
+      {% csrf_token %}
+      <label for="message-input">Message:</label>
+      <br />
+      <textarea
+        id="message-input"
+        name="message"
+        cols="40"
+        rows="4"
+        minlength="1"
+        maxlength="1024"
+        required="true"
+      ></textarea>
+      <br />
+      <label for="name-input">Name (optional):</label>
+      <br />
+      <input
+        type="text"
+        id="name-input"
+        name="name"
+        maxlength="256"
+      />
+      <br />
+      <label for="spam-select">
+          Describe the spam content of your message:
+      </label>
+      <br />
+      <select id="spam-select" name="spam">
+        <option value="1">well, it hasn't got MUCH spam in it</option>
+        <option value="1">spam, eggs, bacon &amp; spam</option>
+        <option value="0">absolutely zero spam</option>
+        <option value="1">spam, egg, spam, spam, bacon &amp; spam</option>
+        <option value="1">spam spam spam spam spam spam spam spam</option>
+      </select>
+      <br />
+      <input type="submit" value="Sign guestbook" />
+    </form>
+    {% for entry in guestbook_entries %}
+    <p>
+      <em>{{ entry.message|escape|linebreaksbr }}</em>&mdash;{{ entry.name|escape|default:"anonymous" }}, {{ entry.date|date:"j M Y" }}
+    </p>
+    {% endfor %}
+    <hr />
+    <a href="/">home</a>
+  </body>
+</html>
