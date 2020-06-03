@@ -1,0 +1,19 @@
+{% load blog_extras %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link href="../lunasspecto.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, intiial-scale=1" />
+    <title>hamster.dance guestbook</title>
+  </head>
+  <body>
+    <h1>hamster.dance blog</h1>
+    {% for article in articles %}
+    <h2>{{ article.title|markdown|safe }}</h2>
+    {{ article.body|markdown|safe }}
+    {% endfor %}
+    <hr />
+    <a href="/">home</a>
+  </body>
+</html>
