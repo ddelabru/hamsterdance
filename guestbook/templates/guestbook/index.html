@@ -2,13 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link href="../lunasspecto.css" rel="stylesheet" />
+    <link href="/lunasspecto.css" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, intiial-scale=1" />
     <title>hamster.dance guestbook</title>
   </head>
   <body>
     <h1>hamster.dance guestbook</h1>
-    <form action="./submit/" method="post">
+    <form action="{{% url 'blog:submit' %}}" method="post">
       {% csrf_token %}
       <label for="message-input">Message:</label>
       <br />
