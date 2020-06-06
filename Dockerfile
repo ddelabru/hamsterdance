@@ -1,4 +1,4 @@
-FROM docker.io/python:3-slim
+FROM docker.io/python:3
 
 COPY ./hamsterdance /opt/hamsterdance/hamsterdance
 COPY ./blog /opt/hamsterdance/blog
