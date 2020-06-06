@@ -10,7 +10,12 @@
   <body>
     <h1>hamster.dance blog</h1>
     {% for article in articles %}
-    <h2>{{ article.title|markdown|safe }}</h2>
+    <hr />
+    <h2>{{ article.title|safe }}</h2>
+    <p><em>
+      Published {{ article.published|date:"j M Y" }},
+      last modified {{ article.modified|date:"j M Y" }}
+    </em></p>
     {{ article.body|markdown|safe }}
     {% endfor %}
     <hr />
