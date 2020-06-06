@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DJANGO_DEBUG", default=False) in {"True", "true"}
+DEBUG = os.getenv("DJANGO_DEBUG", default="False") in {"True", "true"}
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "142.11.211.68", "hamster.dance"]
 
