@@ -15,9 +15,8 @@ class Article(models.Model):
     body = models.TextField(blank=False)
     slug = models.SlugField(max_length=32, unique=True)
     tags = models.ManyToManyField(Tag)
-    published = models.DateTimeField(default=datetime.now)
+    published = models.DateTimeField(default=datetime.utcnow)
     modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        if self.title:
-            return self.slug
+        return self.slug
