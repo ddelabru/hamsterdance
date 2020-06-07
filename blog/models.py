@@ -1,7 +1,6 @@
-from datetime import date
+from datetime import datetime
 
 from django.db import models
-from django.utils import timezone
 
 
 class Tag(models.Model):
@@ -16,7 +15,7 @@ class Article(models.Model):
     body = models.TextField(blank=False)
     slug = models.SlugField(max_length=32, unique=True)
     tags = models.ManyToManyField(Tag)
-    published = models.DateTimeField(default=timezone.now)
+    published = models.DateTimeField(default=datetime.now)
     modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):

@@ -1,10 +1,13 @@
+from datetime import datetime
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 from .models import Article, Tag
 
 
 def index(request, page_number=1):
-    articles = Article.objects.order_by("-published")
+    articles = Article.objects.filter(published__lte=datetime.now()).order_by(
+        "-published"
+    )
     valid_number = page_number > 0 and ((page_number - 1) * 5) < len(articles)
     if valid_number:
         return render(
@@ -23,14 +26,16 @@ def index(request, page_number=1):
 
 
 def article_view(request, slug=""):
-    article = get_object_or_404(Article, slug=slug)
+    article = get_object_or_404(Article, slug=slug, published__lte=datetime.now())
     tags = article.tags.all()
     return render(request, "blog/article.html", {"article": article, "tags": tags})
 
 
 def tag_view(request, tag_name="", page_number=1):
     tag = get_object_or_404(Tag, name=tag_name)
-    articles = Article.objects.filter(tags__name=tag_name).order_by("-published")
+    articles = Article.objects.filter(
+        tags__name=tag_name, published__lte=datetime.now()
+    ).order_by("-published")
     valid_number = page_number > 0 and ((page_number - 1) * 5) < len(articles)
     if valid_number:
         return render(
