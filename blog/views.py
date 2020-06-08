@@ -59,7 +59,7 @@ def tag_view(request, tag_name="", page_number=1):
 
 class ArticlesFeed(Feed):
     title = "hamster.dance blog articles"
-    link = "/blog/"
+    link = "https://hamster.dance/blog/"
     description = "Articles from the hamster.dance blog."
     feed_url = "/blog/rss/"
     author_name = "Dominique Cyprès"
@@ -79,7 +79,7 @@ class ArticlesFeed(Feed):
         return f"Blog article published {published_date_string}."
 
     def item_link(self, item):
-        return reverse("blog:article", args=[item.slug])
+        return f"https://hamster.dance/blog/article/{item.slug}/"
 
     def item_pubdate(self, item):
         return item.published
