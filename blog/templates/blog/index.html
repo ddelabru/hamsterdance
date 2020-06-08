@@ -20,16 +20,17 @@
     </em></p>
     {{ article.body|markdown|safe }}
     {% endfor %}
-    <hr />
-    {% if page_number > 1 %}
-    <a href="{% url 'blog:page' previous_page %}">newer articles</a>
-    {% endif %}
-    {% if not last_page %}
-    <a href="{% url 'blog:page' next_page %}">older articles</a>
-    {% endif %}
-    {% if page_number > 1 or not last_page %}
-    <br />
-    {% endif %}
-    <a href="/">home</a>
+    <footer>
+      <hr />
+      <a href="{% url 'blog:rss' %}">RSS feed</a>
+      {% if page_number > 1 %}
+      <a href="{% url 'blog:page' previous_page %}">newer articles</a>
+      {% endif %}
+      {% if not last_page %}
+      <a href="{% url 'blog:page' next_page %}">older articles</a>
+      {% endif %}
+      <br />
+      <a href="/">home</a>
+    </footer>
   </body>
 </html>

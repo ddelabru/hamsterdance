@@ -20,9 +20,11 @@
       <a href="{% url 'blog:tag' tag.name %}">{{tag.name}} </a>
       {% endfor %}
     </em></p>
-    <hr />
-    <a href="/">home</a>
-    &gt;
-    <a href="{% url 'blog:index' %}">blog</a>
+    <footer>
+      <hr />
+      <a href="/">home</a>
+      &gt;
+      <a href="{% url 'blog:index' %}">blog</a>
+    </footer>
   </body>
 </html>
