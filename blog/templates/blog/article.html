@@ -17,7 +17,7 @@
     <p><em>
       Tags:
       {% for tag in tags %}
-      <a href="{% url 'blog:tag' tag.name %}">{{tag.name}} </a>
+      <a href="{% url 'blog:tag' tag.name %}" rel="tag">{{tag.name}}</a>
       {% endfor %}
     </em></p>
     <footer>
