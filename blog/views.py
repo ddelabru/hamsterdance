@@ -4,6 +4,8 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils.feedgenerator import Rss201rev2Feed
+from django.utils.html import strip_tags
+from markdown import markdown
 from .models import Article, Tag
 
 
@@ -75,8 +77,8 @@ class ArticlesFeed(Feed):
         return item.title
 
     def item_description(self, item):
-        published_date_string = item.published.strftime("%d %b %Y")
-        return f"Blog article published {published_date_string}."
+        stripped_body = strip_tags(markdown(item.body, extensions=["smarty"]))
+        return stripped_body[: stripped_body.find(".") + 1]
 
     def item_link(self, item):
         return f"https://hamster.dance/blog/article/{item.slug}/"
