@@ -8,7 +8,7 @@
   </head>
   <body>
     <h1>hamster.dance guestbook</h1>
-    <form action="{{% url 'blog:submit' %}}" method="post">
+    <form action="{% url 'guestbook:submit' %}" method="post">
       {% csrf_token %}
       <label for="message-input">Message:</label>
       <br />
