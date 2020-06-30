@@ -1,4 +1,5 @@
 from datetime import datetime
+from html import unescape
 from django.contrib.syndication.views import Feed
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
@@ -77,7 +78,7 @@ class ArticlesFeed(Feed):
         return item.title
 
     def item_description(self, item):
-        stripped_body = strip_tags(markdown(item.body, extensions=["smarty"]))
+        stripped_body = unescape(strip_tags(markdown(item.body, extensions=["smarty"])))
         return stripped_body[: stripped_body.find(".") + 1]
 
     def item_link(self, item):
