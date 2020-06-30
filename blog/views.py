@@ -3,7 +3,6 @@ from html import unescape
 from django.contrib.syndication.views import Feed
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
 from django.utils.feedgenerator import Rss201rev2Feed
 from django.utils.html import strip_tags
 from markdown import markdown
@@ -64,7 +63,7 @@ class ArticlesFeed(Feed):
     title = "hamster.dance blog articles"
     link = "https://hamster.dance/blog/"
     description = "Articles from the hamster.dance blog."
-    feed_url = "/blog/rss/"
+    feed_url = "https://hamster.dance/blog/rss/"
     author_name = "Dominique Cyprès"
     author_email = "lunasspecto@hamster.dance"
     feed_type = Rss201rev2Feed
