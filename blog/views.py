@@ -49,7 +49,7 @@ def tag_view(request, tag_name="", page_number=1):
             {
                 "tag": tag,
                 "articles": articles[5 * (page_number - 1) : 5 * page_number],
-                "last_page": (5 * page_number) > len(articles),
+                "last_page": (5 * page_number) >= len(articles),
                 "next_page": page_number + 1,
                 "page_number": page_number,
                 "previous_page": page_number - 1,
