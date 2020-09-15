@@ -10,6 +10,7 @@ class Tag(models.Model):
 
 class Article(models.Model):
     title = models.CharField(blank=True, max_length=256)
+    description = models.CharField(max_length=256)
     body = models.TextField(blank=False)
     slug = models.SlugField(max_length=32, unique=True)
     tags = models.ManyToManyField(Tag)

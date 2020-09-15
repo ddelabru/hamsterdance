@@ -77,8 +77,7 @@ class ArticlesFeed(Feed):
         return item.title
 
     def item_description(self, item):
-        stripped_body = unescape(strip_tags(markdown(item.body, extensions=["smarty"])))
-        return stripped_body[: stripped_body.find(".") + 1]
+        return item.description
 
     def item_link(self, item):
         return f"https://hamster.dance/blog/article/{item.slug}/"
