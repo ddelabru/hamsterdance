@@ -8,13 +8,9 @@
     <title>{{ episode.title }}&mdash;The World on a Wire Show</title>
   </head>
   <body>
-    <h1>
-      Season {{ episode.season }}, Episode {{ episode.number }}:
-      {{ episode.title }}
-    </h1>
     <p>
-        <audio controls src="{{ audio_url|safe }}">
-          <a download href="{{ audio_url|safe }}">Download this episode.</a>
+        <audio controls src="{{ episode.audio_url|safe }}">
+          <a download href="{{ episode.audio_url|safe }}">Download this episode.</a>
         </audio>
     </p>
     {{ episode.transcript|markdown|safe }}

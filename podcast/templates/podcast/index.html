@@ -14,15 +14,13 @@
       history of computing.
     </p>
     {% for season in seasons %}
-    <h2>Season {{ season }}</h2>
-    <ul>
+      <h2>Season {{ season }}</h2>
       {% for episode in season_episodes|get:season %}
         <h3><a href="{% url 'podcast:episode' episode.slug %}">
           Episode {{ episode.number }}: {{episode.title}}
         </a></h3>
         <p>{{ episode.description }}</p>
-        {% endfor %}
-      </ul>
+      {% endfor %}
     {% endfor %}
     <footer>
       <hr />
