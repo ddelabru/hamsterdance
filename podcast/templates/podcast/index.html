@@ -1,0 +1,32 @@
+{% load podcast_extras %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link href="/lunasspecto.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The World on a Wire Show</title>
+  </head>
+  <body>
+    <h1>The World on a Wire Show</h1>
+    <p>
+      <em>The World on a Wire Show</em> is a podcast that explores the social
+      history of computing.
+    </p>
+    {% for season in seasons %}
+    <h2>Season {{ season }}</h2>
+    <ul>
+      {% for episode in season_episodes|get:season %}
+        <h3><a href="{% url 'podcast:episode' episode.slug %}">
+          Episode {{ episode.number }}: {{episode.title}}
+        </a></h3>
+        <p>{{ episode.description }}</p>
+        {% endfor %}
+      </ul>
+    {% endfor %}
+    <footer>
+      <hr />
+      <a href="/">home</a>
+    </footer>
+  </body>
+</html>

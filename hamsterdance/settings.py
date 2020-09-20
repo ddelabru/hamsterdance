@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "142.11.211.68", "hamster.da
 INSTALLED_APPS = [
     "blog.apps.BlogConfig",
     "guestbook.apps.GuestbookConfig",
+    "podcast.apps.PodcastConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

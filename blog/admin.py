@@ -3,7 +3,8 @@ from .models import Article, Tag
 
 
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ("published", "title")
+    list_display = ("title", "published")
+    ordering = ("-published", "title")
     prepopulated_fields = {"slug": ("title",)}
 
 

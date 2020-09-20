@@ -4,6 +4,7 @@ COPY ./hamsterdance /opt/hamsterdance/hamsterdance
 COPY ./blog /opt/hamsterdance/blog
 COPY ./guestbook /opt/hamsterdance/guestbook
 COPY ./manage.py /opt/hamsterdance/manage.py
+COPY ./podcast /opt/hamsterdance/podcast
 COPY ./requirements.txt /opt/hamsterdance/requirements.txt
 
 WORKDIR /opt/hamsterdance

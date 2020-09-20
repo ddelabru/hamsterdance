@@ -1,0 +1,28 @@
+{% load podcast_extras %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link href="/lunasspecto.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ episode.title }}&mdash;The World on a Wire Show</title>
+  </head>
+  <body>
+    <h1>
+      Season {{ episode.season }}, Episode {{ episode.number }}:
+      {{ episode.title }}
+    </h1>
+    <p>
+        <audio controls src="{{ audio_url|safe }}">
+          <a download href="{{ audio_url|safe }}">Download this episode.</a>
+        </audio>
+    </p>
+    {{ episode.transcript|markdown|safe }}
+    <footer>
+      <hr />
+      <a href="/">home</a>
+      &gt;
+      <a href="/podcast/">podcast</a>
+    </footer>
+  </body>
+</html>
