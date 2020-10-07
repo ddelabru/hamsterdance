@@ -1,5 +1,8 @@
 { config, lib, pkgs, ... }:
 {
+  imports = [
+    ./vars.nix
+  ];
   config = {  
     systemd.services.hamsterdance = let
       djangoEnv = let
@@ -12,7 +15,7 @@
             rev = "d0df0dc569a6b6bb72dd58b8f5153d4bf82bdcb6";
             sha256 = "02jjq2bmfsn8anwvarsvdyx7b6r2q5j02a3i8vl4bpwnny2hhms8";
           };
-          buildInputs = with pkgs.python3.pkgs [ daphne django ];
+          buildInputs = with pkgs.python3.pkgs; [ daphne django ];
           propagatedBuildInputs = with pkgs.python3.pkgs; [ 
             cffi markdown pyasn1 psycopg2 
           ];
@@ -27,11 +30,11 @@
       path = [ pkgs.gettext ];
       preStart = ''
         ${djangoEnv}/bin/python manage.py migrate;
-        ${djangoEnv}/bin/python manage.py collectstatic --no-input;
+        # ${djangoEnv}/bin/python manage.py collectstatic --no-input;
       '';
       serviceConfig = {
         WorkingDirectory = "/var/www/hamsterdance/";
-        ExecStart = ''${djangoEnv}/bin/gunicorn \
+        ExecStart = ''${djangoEnv}/bin/daphne \
           -b localhost \
           -p 8000 \
           hamsterdance.asgi:application
@@ -39,12 +42,15 @@
         Restart = "always";
         RestartSec = "10s";
         StartLimitInterval = "1min";
-        User = "jenkins";
       };
     };
 
-    services.postgresql.ensureDatabases = ["hamsterdance"]
+    services.postgresql = {
+      enable = true;
+      ensureDatabases = ["hamsterdance"];
+    };
 
+    /*
     services.nginx.virtualHosts = {  
       "hamster.dance" = {
         enableACME = true;
@@ -84,11 +90,12 @@
         urlPrefix = "/awstats";
       };
     };
+    services.awstats.enable = true;
+
+    services.dovecot2.enable = true;
+    services.postfix.enable = true;
+
+    networking.firewall.allowedTCPPorts = [ 25 80 110 143 443 465 993 ];
+    */
   };
-  services.awstats.enable = true;
-
-  services.dovecot2.enable = true;
-  services.postfix.enable = true;
-
-  networking.firewall.allowedTCPPorts = [ 25 80 110 143 443 465 993 ];
 }
