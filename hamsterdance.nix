@@ -9,8 +9,8 @@
           src = pkgs.fetchFromGitHub {
             owner = "ddelabru";
             repo = "hamsterdance";
-            rev = "cc43a2b03f4496ee7280f88a8ca75a906df40dbf";
-            sha256 = "00rkkjlmi6zj99jh8v9w36isq66i6nybs0hh6var92l3zy1x63b5";
+            rev = "9932f7e5fad39f43dba0dd35bc835aa4b779b319";
+            sha256 = "1wgff9hzl7vfw0af9h8p1m692wfdlzcrzvqjqw8gslqgclni1nyb";
           };
           buildInputs = with pkgs.python3.pkgs; [ daphne django ];
           propagatedBuildInputs = with pkgs.python3.pkgs; [ 
@@ -45,7 +45,7 @@
     services.postgresql = {
       authentication = lib.mkForce ''
         # TYPE	DATABASE	USER	ADDRESS		METHOD
-        local	all		all			peer
+        local	all		all			trust
         host	all		all	127.0.0.1/32	password
         host	all		all	::1/128		password
       '';
