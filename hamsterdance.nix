@@ -43,6 +43,12 @@
     };
 
     services.postgresql = {
+      authentication = lib.mkForce ''
+        # TYPE	DATABASE	USER	ADDRESS		METHOD
+        local	all		all			peer
+        host	all		all	127.0.0.1/32	password
+        host	all		all	::1/128		password
+      '';
       enable = true;
       ensureDatabases = ["hamsterdance"];
       identMap = "map-name root postgres";
