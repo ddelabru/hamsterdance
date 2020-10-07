@@ -1,8 +1,5 @@
 { config, lib, pkgs, ... }:
 {
-  imports = [
-    ./vars.nix
-  ];
   config = {  
     systemd.services.hamsterdance = let
       djangoEnv = let
@@ -12,8 +9,8 @@
           src = pkgs.fetchFromGitHub {
             owner = "ddelabru";
             repo = "hamsterdance";
-            rev = "9f4c4acce7c69836216fb683fe9e2d8455497825";
-            sha256 = "0nkcgfy881r5s1ypffrcd8n869i72rac1yp2x968l9vg552czmyh";
+            rev = "cc43a2b03f4496ee7280f88a8ca75a906df40dbf";
+            sha256 = "00rkkjlmi6zj99jh8v9w36isq66i6nybs0hh6var92l3zy1x63b5";
           };
           buildInputs = with pkgs.python3.pkgs; [ daphne django ];
           propagatedBuildInputs = with pkgs.python3.pkgs; [ 
@@ -22,22 +19,22 @@
           doCheck = false;
         };
       in
-        pkgs.python3.withPackages (ps: with ps; [daphne django hamsterdance ]);
+        pkgs.python3.withPackages (ps: with ps; [gunicorn django hamsterdance ]);
     in {
       description = "hamster.dance Django application";
+      environment = import ./vars.nix;
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
       path = [ pkgs.gettext ];
       preStart = ''
-        ${djangoEnv}/bin/python manage.py migrate;
+        # ${djangoEnv}/bin/python manage.py migrate;
         # ${djangoEnv}/bin/python manage.py collectstatic --no-input;
       '';
       serviceConfig = {
-        WorkingDirectory = "/var/www/hamsterdance/";
-        ExecStart = ''${djangoEnv}/bin/daphne \
+        ExecStart = ''${djangoEnv}/bin/gunicorn \
           -b localhost \
           -p 8000 \
-          hamsterdance.asgi:application
+          hamsterdance.wsgi:application
         '';
         Restart = "always";
         RestartSec = "10s";
@@ -48,6 +45,7 @@
     services.postgresql = {
       enable = true;
       ensureDatabases = ["hamsterdance"];
+      identMap = "map-name root postgres";
     };
 
     /*
