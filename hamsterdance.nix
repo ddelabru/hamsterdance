@@ -12,8 +12,8 @@
           src = pkgs.fetchFromGitHub {
             owner = "ddelabru";
             repo = "hamsterdance";
-            rev = "d0df0dc569a6b6bb72dd58b8f5153d4bf82bdcb6";
-            sha256 = "02jjq2bmfsn8anwvarsvdyx7b6r2q5j02a3i8vl4bpwnny2hhms8";
+            rev = "9f4c4acce7c69836216fb683fe9e2d8455497825";
+            sha256 = "0nkcgfy881r5s1ypffrcd8n869i72rac1yp2x968l9vg552czmyh";
           };
           buildInputs = with pkgs.python3.pkgs; [ daphne django ];
           propagatedBuildInputs = with pkgs.python3.pkgs; [ 

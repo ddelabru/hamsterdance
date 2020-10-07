@@ -1,5 +1,5 @@
 cffi!=1.11.3,>=1.8
-django>=3.0.7
+django
 daphne>=2.5.0
 markdown>=3.2.2
 psycopg2>=2.8.5
