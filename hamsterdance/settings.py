@@ -81,9 +81,9 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "hamsterdance",
         "USER": "postgres",
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": "localhost",
-        "PORT": "5432",
+        # "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        # "HOST": "localhost",
+        # "PORT": "5432",
     }
 }
 
