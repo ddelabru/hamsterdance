@@ -9,17 +9,19 @@
           src = pkgs.fetchFromGitHub {
             owner = "ddelabru";
             repo = "hamsterdance";
-            rev = "9932f7e5fad39f43dba0dd35bc835aa4b779b319";
-            sha256 = "1wgff9hzl7vfw0af9h8p1m692wfdlzcrzvqjqw8gslqgclni1nyb";
+            rev = "cc5f9e7dd66856b5bf4b60f883653a2e57d5a9fd";
+            sha256 = "0vf65c5k1k2qd730p9nm55x28kz4h1bcrl0zb34923gxp1215553";
           };
-          buildInputs = with pkgs.python3.pkgs; [ daphne django ];
+          buildInputs = with pkgs.python3.pkgs; [ daphne django_3 ];
           propagatedBuildInputs = with pkgs.python3.pkgs; [ 
             cffi markdown pyasn1 psycopg2 
           ];
           doCheck = false;
         };
       in
-        pkgs.python3.withPackages (ps: with ps; [gunicorn django hamsterdance ]);
+        pkgs.python3.withPackages (
+          ps: with ps; [gunicorn django_3 hamsterdance ]
+        );
     in {
       description = "hamster.dance Django application";
       environment = import ./vars.nix;
