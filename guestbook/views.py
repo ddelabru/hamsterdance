@@ -12,6 +12,12 @@ def index(request):
 
 
 def submit(request):
-    if request.POST["spam"] == "0":
-        Entry.objects.create(message=request.POST["message"], name=request.POST["name"])
+    if (
+        request.method == "POST"
+        and request.POST.get("spam", 1) == 0
+        and request.POST.get("message")
+    ):
+        Entry.objects.create(
+            message=request.POST["message"], name=request.POST.get("name", "")
+        )
     return HttpResponseRedirect("../")

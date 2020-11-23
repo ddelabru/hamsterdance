@@ -23,13 +23,14 @@
           ps: with ps; [gunicorn django_3 hamsterdance ]
         );
     in {
+
       description = "hamster.dance Django application";
       environment = import ./vars.nix;
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
       path = [ pkgs.gettext ];
       preStart = ''
-        # ${djangoEnv}/bin/python manage.py migrate;
+        ${djangoEnv}/bin/python manage.py migrate;
         # ${djangoEnv}/bin/python manage.py collectstatic --no-input;
       '';
       serviceConfig = {
@@ -40,8 +41,9 @@
         '';
         Restart = "always";
         RestartSec = "10s";
-        StartLimitInterval = "1min";
+        WorkingDirectory = "/var/www/hamsterdance/";
       };
+      unitConfig.StartLimitInterval = "1min";
     };
 
     services.postgresql = {

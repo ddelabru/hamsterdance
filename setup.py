@@ -17,6 +17,7 @@ setup(
     url="https://hamster.dance/",
     packages=find_packages(),
     include_package_data=True,
+    package_data={"": ["templates/*/*.html"]},
     zip_safe=False,
     classifiers=[
         "Programming Language :: Python :: 3",
