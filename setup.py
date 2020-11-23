@@ -18,6 +18,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     package_data={"": ["templates/*/*.html"]},
+    scripts = ["manage.py"],
     zip_safe=False,
     classifiers=[
         "Programming Language :: Python :: 3",
