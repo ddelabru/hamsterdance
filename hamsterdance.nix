@@ -9,8 +9,8 @@
           src = pkgs.fetchFromGitHub {
             owner = "ddelabru";
             repo = "hamsterdance";
-            rev = "1chg2qvzy1qjvdqa3pzq1hksfvsk3g8xm9r12rywmdil2rzr5frg";
-            sha256 = "0fc9bdyq7wjq7azb1i62fb8v99pisihdpx5ha36cg6cm5hr6hhms";
+            rev = "00900e2e0a56627b9cdcc19f91d5443bb6e4e914";
+            sha256 = "1jiq9ilc7njmlsvj8861nx01pzx67637gxgv8qpiircv0njbvkqb";
           };
           buildInputs = with pkgs.python3.pkgs; [ daphne django_3 ];
           propagatedBuildInputs = with pkgs.python3.pkgs; [ 
@@ -30,8 +30,8 @@
       wantedBy = [ "multi-user.target" ];
       path = [ pkgs.gettext ];
       preStart = ''
-        ${djangoEnv}/usr/bin/manage.py migrate;
-        # ${djangoEnv}/usr/bin/manage.py collectstatic --no-input;
+        ${djangoEnv}/bin/manage.py migrate;
+        # ${djangoEnv}/bin/manage.py collectstatic --no-input;
       '';
       serviceConfig = {
         ExecStart = ''${djangoEnv}/bin/gunicorn \
