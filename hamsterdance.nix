@@ -1,6 +1,8 @@
 { config, lib, pkgs, ... }:
 {
-  config = {  
+  config = {
+
+    # In this section we define the hamster.dance Django application
     systemd.services.hamsterdance = let
       djangoEnv = let
         hamsterdance = pkgs.python3.pkgs.buildPythonPackage rec {
@@ -20,10 +22,9 @@
         };
       in
         pkgs.python3.withPackages (
-          ps: with ps; [gunicorn django_3 hamsterdance ]
+          ps: with ps; [daphne django_3 hamsterdance]
         );
     in {
-
       description = "hamster.dance Django application";
       environment = import ./vars.nix;
       after = [ "network.target" ];
@@ -34,10 +35,10 @@
         # ${djangoEnv}/bin/manage.py collectstatic --no-input;
       '';
       serviceConfig = {
-        ExecStart = ''${djangoEnv}/bin/gunicorn \
+        ExecStart = ''${djangoEnv}/bin/daphne \
           -b localhost \
           -p 8000 \
-          hamsterdance.wsgi:application
+          hamsterdance.asgi:application
         '';
         Restart = "always";
         RestartSec = "10s";
@@ -46,6 +47,7 @@
       unitConfig.StartLimitInterval = "1min";
     };
 
+    # The hamster.dance Django application uses a PostgreSQL database
     services.postgresql = {
       authentication = lib.mkForce ''
         # TYPE	DATABASE	USER	ADDRESS		METHOD
@@ -56,6 +58,47 @@
       enable = true;
       ensureDatabases = ["hamsterdance"];
       identMap = "map-name root postgres";
+    };
+
+    # In this section we define the bibliogram service
+    systemd.services.bibliogram = let
+      nodePackages = import ./node-composition.nix {
+        inherit pkgs;
+      };
+    in let
+      bibliogram = pkgs.stdenv.mkDerivation {
+        name = "bibliogram";
+        version = "1.0.0";
+        src = pkgs.fetchgit {
+          url = "https://git.sr.ht/~cadence/bibliogram";
+          rev = "3af4b2f23797ae2a343097dc32557a5123105cea";
+          sha256 = "0lnn648h96w103m4zizns3sn81zzkjj80gnlbmbyw1gkghmpn495";
+        };
+        propagatedBuildInputs = [
+          nodePackages."bibliogram-https://git.sr.ht/~cadence/bibliogram/archive/3af4b2f23797ae2a343097dc32557a5123105cea.tar.gz"
+          pkgs.nodejs
+        ];
+        buildPhase = ''
+          npm install
+        '';
+        installPhase = ''
+          mkdir -p $out/lib
+          cp -R ./* $out/lib/
+        '';
+      };
+    in {
+      description = "bibliogram application";
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
+      path = [ pkgs.gettext ];
+      serviceConfig = {
+        ExecStart = ''${pkgs.nodejs}/bin/npm start
+        '';
+        Restart = "always";
+        RestartSec = "10s";
+        WorkingDirectory = "${bibliogram}/lib/";
+      };
+      unitConfig.StartLimitInterval = "1min";
     };
 
     /*
