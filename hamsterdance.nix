@@ -76,7 +76,7 @@
         };
         nativeBuildInputs = [pkgs.coreutils pkgs.makeWrapper];
         postInstall = let
-          nodejs = pkgs.nodejs-10_x;
+          nodejs = pkgs.nodejs-12_x;
         in ''
           ln -sfT /var/lib/bibliogram db
           echo 'module.exports = {
@@ -91,7 +91,6 @@
             },
             website_origin: "https://bibliogram.hamster.dance"
           }' > config.js
-          npm build
           cp -R ./* $out/lib/
           makeWrapper ${nodejs}/bin/npm $out/bin/bibliogram \
             --run "cd $out/lib/" \
@@ -116,6 +115,7 @@
     environment.systemPackages = with pkgs; [mutt neofetch vim];
     services.nginx.virtualHosts = {  
       "hamster.dance" = {
+        addSSL = true;
         enableACME = true;
         forceSSL = false;
         extraConfig = ''
@@ -134,12 +134,14 @@
         '';
       };
       "www.hamster.dance" = {
+        addSSL = true;
         enableACME = true;
         forceSSL = false;
         globalRedirect = "hamster.dance";
       };
       "bibliogram.hamster.dance" = {
-        enableACME = true;
+        # addSSL = true;
+        # enableACME = true;
         forceSSL = false;
         extraConfig = ''
           location / {
@@ -149,6 +151,11 @@
       };
     };
     services.nginx.enable = true;
+
+    security.acme = {
+      acceptTerms = true;
+      email = "lunasspecto@gmail.com";
+    };
 
     services.awstats.configs."hamsterdance" = {
       domain = "hamster.dance";
@@ -163,6 +170,7 @@
       };
     };
     services.awstats.enable = true;
+    services.awstats.updateAt = "hourly";
 
     services.dovecot2.enable = true;
     services.postfix = {
@@ -171,7 +179,7 @@
     };
 
     networking = {
-      hostname = "hamster";
+      hostName = "hamster";
       domain = "hamster.dance";
       firewall.allowedTCPPorts = [ 25 80 110 143 443 465 993 ];
     };
@@ -203,6 +211,7 @@
     users.users.lunasspecto = {
       description = "Dominique Cyprès";
       extraGroups = ["wheel" "dovecot2"];
+      isNormalUser = true;
       openssh.authorizedKeys.keys = [
         "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCb4qUnbFGpARMrotq1xTMw3HeuPQxllFsqxaB3kRorJAISDUsEhNwEopkgvmj8QiRKowu9Znt2zMl1ZQDWiyPTZ2vlJNqvHGVUa6DDe8QqtGxFQHlxEIL6QWXGQrjFRsGKY9NjXPuAGM7lpycgf2eLEEEHf640URJbLqumBOH5E+I2vMIsd7H9a13xLiXOGq4FN87SzU2YWutrqBp40SgZ6ebEp6ETcfoj+kGgTbm7iSwzTgzBYme4Sr8thMwd9SjTIZ2y6hoombl+ZFdHJWgVWd0LXkYKwKXnwFNP7d/QfnFLrFYvkh4l6Hi/7EQC1SIDTDuZTZBG11wBPuPkPJF0iCtZ5GH8nxHEqjLkHqOamBiZ/RB8ijg/X0E6l6Jt1+ywUflijwcdxlg6joDYSUxeXdPEOeTHZFvpdlbyDOvwNMMubLowEFRPMJEf2Z2TkPZRPea3+HMs/hzX0Y1ayBRlBQXJxCsbOmA8vHhKRTb4IrjBRmzccMEPEuHQn3PU/WE= lunasspecto@slaptop"
         "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDg7hxlbxFadIwpQ6MW7r2bT4v4KnSJNG65XfsdqUVr4PtcHIGD6zOPWbEkYehqgi/EebSG0SomNWDN/OGx/S1TT35yo4lxYkFh29rijGE5qPvHjHx+ebDIgJcMQ+28UoAmKnfGxOY8HFX7AsONw59aDo6wd8LMLO+G8lRDbVHNlIi0sr9iaQ5cd/XGuiG8ADKvZXtiy/iLdgRo34eqzBqbwYHv/YOmvzHUuoMtP9ESr7sO50BcjQ9VgckwLZ2/CiWo05naVJ6r2dJf4w+7bGUcEYKFlI2wjdRezWB8GdTOAtqYCCVk6bjCVviWiCvWzYoS7ir226w8m6FQ5tw+JQX6IRbnjSPOU412Vwoo8LN2ZkYzSP3jMib57SP82xH2+RXGzQQgtMnp6abWKaWmv2BSAt9wrN5TLdNo6+w7Q+evVdrJqDxLKDm2Kg1f8lGN2bytLT/yahW3rAphiK6xA0YQZPMrPNSboSF4TBOY7jqPTgrvo3qyif1w4z+Il3g23F8= ddelabru@ddelabru-t490s"
