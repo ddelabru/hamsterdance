@@ -108,6 +108,7 @@
         '';
         Restart = "always";
         RestartSec = "10s";
+        User = "bibliogram";
       };
       unitConfig.StartLimitInterval = "1min";
     };
@@ -136,6 +137,15 @@
         enableACME = true;
         forceSSL = false;
         globalRedirect = "hamster.dance";
+      };
+      "bibliogram.hamster.dance" = {
+        enableACME = true;
+        forceSSL = false;
+        extraConfig = ''
+          location / {
+            proxy_pass http://localhost:10407/;
+          }
+        '';
       };
     };
     services.nginx.enable = true;
@@ -199,5 +209,7 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMFc1sNfQxETz8L7lf7ojb3iF2nFOgx91D8uGDTkKFzo JuiceSSH"
       ];
     };
+    users.users.django = {};
+    users.users.bibliogram = {};
   };
 }
