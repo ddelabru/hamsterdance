@@ -66,7 +66,7 @@
         inherit pkgs;
       };
     in let
-      bibliogram = pkgs.stdenv.mkDerivation {
+      bibliogram = nodePackages."bibliogram-https://git.sr.ht/~cadence/bibliogram/archive/3af4b2f23797ae2a343097dc32557a5123105cea.tar.gz".override {
         name = "bibliogram";
         version = "1.0.0";
         src = pkgs.fetchgit {
@@ -74,16 +74,28 @@
           rev = "3af4b2f23797ae2a343097dc32557a5123105cea";
           sha256 = "0lnn648h96w103m4zizns3sn81zzkjj80gnlbmbyw1gkghmpn495";
         };
-        propagatedBuildInputs = [
-          nodePackages."bibliogram-https://git.sr.ht/~cadence/bibliogram/archive/3af4b2f23797ae2a343097dc32557a5123105cea.tar.gz"
-          pkgs.nodejs
-        ];
-        buildPhase = ''
-          npm install
-        '';
-        installPhase = ''
-          mkdir -p $out/lib
+        nativeBuildInputs = [pkgs.coreutils pkgs.makeWrapper];
+        postInstall = let
+          nodejs = pkgs.nodejs-10_x;
+        in ''
+          ln -sfT /var/lib/bibliogram db
+          echo 'module.exports = {
+            tor: {
+              enabled: false
+            },
+            feeds: {
+              enabled: true
+            },
+            caching: {
+              db_post_n3: false
+            },
+            website_origin: "https://bibliogram.hamster.dance"
+          }' > config.js
+          npm build
           cp -R ./* $out/lib/
+          makeWrapper ${nodejs}/bin/npm $out/bin/bibliogram \
+            --run "cd $out/lib/" \
+            --prefix PATH : ${lib.makeBinPath [nodejs pkgs.bash]}
         '';
       };
     in {
@@ -92,11 +104,10 @@
       wantedBy = [ "multi-user.target" ];
       path = [ pkgs.gettext ];
       serviceConfig = {
-        ExecStart = ''${pkgs.nodejs}/bin/npm start
+        ExecStart = ''${bibliogram}/bin/bibliogram start
         '';
         Restart = "always";
         RestartSec = "10s";
-        WorkingDirectory = "${bibliogram}/lib/";
       };
       unitConfig.StartLimitInterval = "1min";
     };
