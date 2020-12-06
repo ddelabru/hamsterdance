@@ -112,7 +112,7 @@
       unitConfig.StartLimitInterval = "1min";
     };
 
-    /*
+    environment.systemPackages = with pkgs; [mutt neofetch vim];
     services.nginx.virtualHosts = {  
       "hamster.dance" = {
         enableACME = true;
@@ -199,6 +199,5 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMFc1sNfQxETz8L7lf7ojb3iF2nFOgx91D8uGDTkKFzo JuiceSSH"
       ];
     };
-    */
   };
 }
