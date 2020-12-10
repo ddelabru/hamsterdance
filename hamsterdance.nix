@@ -78,10 +78,11 @@
         postInstall = let
           nodejs = pkgs.nodejs-12_x;
         in ''
+          mkdir -p /var/lib/bibliogram
           ln -sfT /var/lib/bibliogram db
           echo 'module.exports = {
             tor: {
-              enabled: false
+              enabled: true
             },
             feeds: {
               enabled: true
@@ -112,7 +113,15 @@
       unitConfig.StartLimitInterval = "1min";
     };
 
-    environment.systemPackages = with pkgs; [mutt neofetch vim];
+    environment.systemPackages = with pkgs; [ git mutt neofetch tldr vim ];
+    services.nginx.package = pkgs.nginx.override {
+      modules = [ pkgs.nginxModules.ipscrub ];
+    };
+    services.nginx.commonHttpConfig = ''
+      log_format scrubbed '$remote_addr_ipscrub - $remote_user [$time_local] '
+                          '"$request" $status $body_bytes_sent '
+                          '"$http_referer" "$http_user_agent"';
+    '';
     services.nginx.virtualHosts = {  
       "hamster.dance" = {
         addSSL = true;
@@ -131,6 +140,7 @@
           location /podcast/ {
               proxy_pass http://localhost:8000/podcast/;
           }
+          access_log /var/log/nginx/access.log scrubbed;
         '';
       };
       "www.hamster.dance" = {
@@ -140,12 +150,13 @@
         globalRedirect = "hamster.dance";
       };
       "bibliogram.hamster.dance" = {
-        # addSSL = true;
-        # enableACME = true;
+        addSSL = true;
+        enableACME = true;
         forceSSL = false;
         extraConfig = ''
           location / {
             proxy_pass http://localhost:10407/;
+            access_log off;
           }
         '';
       };
@@ -172,16 +183,59 @@
     services.awstats.enable = true;
     services.awstats.updateAt = "hourly";
 
-    services.dovecot2.enable = true;
+    services.molly-brown = {
+      enable = true;
+      hostName = "hamster.dance";
+      port = 1965;
+      docBase = "/var/gemini/";
+      certPath = "/var/lib/acme/hamster.dance/cert.pem";
+      keyPath = "/var/lib/acme/hamster.dance/key.pem";
+    };
+    systemd.services.molly-brown.serviceConfig.SupplementaryGroups = [
+      config.security.acme.certs."hamster.dance".group
+    ];
+
+    services.dovecot2 = {
+      enable = true;
+      sslServerCert = "/var/lib/acme/hamster.dance/cert.pem";
+      sslServerKey = "/var/lib/acme/hamster.dance/key.pem";
+      extraConfig = ''
+        service auth {
+          unix_listener /var/lib/postfix/queue/private/auth {
+            mode = 0660
+            user = postfix
+            group = postfix
+          }
+        }
+        auth_mechanisms = plain login
+      '';
+    };
     services.postfix = {
       enable = true;
+      enableSubmission = true;
+      enableSubmissions = true;
       hostname = "hamster.dance";
+      sslCert = "/var/lib/acme/hamster.dance/cert.pem";
+      sslKey = "/var/lib/acme/hamster.dance/key.pem";
+      submissionOptions = {
+        smtpd_sasl_auth_enable = "yes";
+        smtpd_sasl_type = "dovecot";
+        smtpd_sasl_path = "private/auth";
+        smtpd_recipient_restrictions = "permit_mynetworks,permit_sasl_authenticated,reject_unauth_destination";
+      };
+      submissionsOptions = {
+        smtpd_sasl_auth_enable = "yes";
+        smtpd_sasl_type = "dovecot";
+        smtpd_sasl_path = "private/auth";
+        smtpd_recipient_restrictions = "permit_mynetworks,permit_sasl_authenticated,reject_unauth_destination";
+        smtpd_tls_wrappermode = "yes"; 
+      };
     };
 
     networking = {
       hostName = "hamster";
       domain = "hamster.dance";
-      firewall.allowedTCPPorts = [ 25 80 110 143 443 465 993 ];
+      firewall.allowedTCPPorts = [ 25 80 110 143 443 465 587 993 1965 ];
     };
 
     programs.mosh.enable = true;
@@ -220,5 +274,19 @@
     };
     users.users.django = {};
     users.users.bibliogram = {};
+
+    programs.zsh.enable = true;
+    users.users.spiritomb = {
+      description = "Hezekiah Sudol";
+      isNormalUser = true;
+      extraGroups = ["wheel" "dovecot2"];
+      shell = pkgs.zsh;
+      openssh.authorizedKeys.keys = [
+        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCt9tY9QPlN9QLkxX83/ID51qt1/ZJriBT9GmuIZ6PuSNzG8e60089L32foB8PP3VWsVxS4w6etGtL62d/NTbWUMFMW+KbWyKhwH0GM5CIqyv2knA+7B3M2EgBDei7qM0u7kQllfq2qa+Xr0X0B7FauL9qbIVl4aXecs6KstbWBRSZxKDugZakjnAwckSBY/kgAg/8ctUOkIam0mSELRnmY6pvFnLow+Fh+V5Rlm6ooi3jKHq4eRRCZqIpd91cA53BYACisTMTFrQaVP1CFQcm96gq0fFzCV6M++S6uK8ewMyyNI5cBPLMrbb7Ih4X86KTTCAEfV+/ypmIpNzB6KtZLLePfA+4dBtMZxkRdUdN/NSQW5IKUlDqZ8a0HW9EmPUyPoa3cd4CFIQ5dFjtrX5xUOv6KhI73OjKwgtyCyhQ4dRDzhsLj/lBQcHnPTsRBUBxjHazAVDypYgb6CpRps8zv+EUIUe6bdiMn2oYpfimHoWqwWksLXm+rX/xM9maxjY4hdLk+Erit4quQDb/vs6NTfFgVuCJIzTWaGeICGL1HHk2AplDG2YlgMN4jEwPRi81s5ewA/m+yNRVGhZpO4FvK9oRsGcEMRThunX9XUmwPGc8vzLO2iHOeERS8+I6mR2YnsxcBUt7RB6bre5ixhAo+uZqGlAhgttbbk5nUMJ4ebw== JuiceSSH"
+        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC280fonA8J7Q14TFS7TnF7mKBMrLgPxy1yL0jeVfZ6Q0KyMGehKMVM58vuyqPxvzTQXncu35N+VYfF46rv+tfzNT7z1JEhxKkNB1B6KVvPjHyRfaBJ4fxUMzmNJYptOE/1dxHW0pcqtbj67Cc5nMI082Ku4wnsuMzE+jkU6JNcpUT473wrm2lnaCAhiJcUcLVVhuCq2WFLOgk8idZZFpZKDmPmWKkG1zMHe5M1/rygAc6fZlGMgHPxjL/M3/JsL6X/ujV9C8IQhr6xTKQi/aglQfpreQ9u0GCRCfmkGBYhS5Ncc4geDzjxPohCVEjhGXe9LXp8pwrbOUpwjv2b4kWB u0_a121@localhost"
+        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC8kbQmIPumfOLbDQb6igdKbMTCvpoXNRi7eX8Bhs+0i5jX2Bb5CgzOf+ZrHp2r93/aH//JQ4zaEf1y/+q/nBzEZsUPtEYxvgiQhjdUeNeeLWPRXj6679cGZIXBns62682qMJ4X2kvq8AbcMyljipl3OGOCbH8oSBFUV2JQ5NiMpkjUncaoPFzrdDdg9ur9N4D6N7++H4VNmHaTTGl14TkKJS0vl8ETxXtTzsHgta6BLh86dTRq2SSgBdUGO3Lzm14RAWX0bwM9WbHjIdE+hxyqXUmtaG2C7Qncubs2kpWYoSvVOZZ1Wct/g+akWNga6qzECOlVN6/y528Wby+BhnHf spiritomb@computerbox"
+        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDTUtN/5XbJ2FlaTzWCufRS0mbSRF9jxCgzsp8PghkOJdOBFqeZ4DUZWljrv6gFblfbak2KmqRg633czxx8YYC+ujwB+s+gB8JnhusjfZKbUVGTQA2mugcgtYXIAnFga6jOQbDeAf0xSh7DTj2VkGEoZGgclJmszP2zdwTTM7UiNsPQHP76WdF7k/tWnpvbggMbhbPqMDmW0hI/wBIBISUOwVMMJ4lFEoByeAZ64KVA+Uv/A4k68WCcDq0wAJJXLd6eN6K9eV9oP89gvw+1toM09tx4R3uAxwWUUN8fBjzIIk2w0iz1nlOmSIfJmkLbC4Ny/mWvRZEDNqkf+pBjMPOCJ5jMdjgIhWVG26Izg/3rQxLgnVZO/T73nOJo9+mBYp+QNoL1G7ndz6mAZBO7jhv/LR8i1qfRQH83kavwd9+QsMkp4VjBJkzGHa4AqT7I7ta3PNtZ34gL7dO/il5ATIwK9hTv0VSMY9azL/nl8mPA1w9OOHUyq7HvHnCLDZIOXMStKIdSLcYaOSsWpo/GZ5O8WMwczb4otpyNG4WTCeT+wjcSXFjW6RtvWKijLI2CP3HPr3SGlpRqtZJ+KotNt7E/ee/FlON1eBHUPyK1hheJ6qj/IaWvty0Xsu7rF5Epswcs4XKW/k35IJBGmBi2Zagfk+2hz3fIdUsy35b/hVDygQ== oneplus"
+      ];
+    };
   };
 }
