@@ -131,6 +131,9 @@
           location / {
               root /var/www/hamsterdance/;
           }
+          location /admin/ {
+              proxy_pass http://localhost:8000/admin/;
+          }
           location /blog/ {
               proxy_pass http://localhost:8000/blog/;
           }
