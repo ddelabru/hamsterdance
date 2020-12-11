@@ -171,9 +171,10 @@
       email = "lunasspecto@gmail.com";
     };
 
-    services.awstats.configs."hamsterdance" = {
+    services.awstats.configs."hamster.dance" = {
       domain = "hamster.dance";
-      hostAliases = [ "www.hamster.dance" ];
+      extraConfig = { IncludeInternalLinksInOriginSection = "0"; };
+      hostAliases = [ "hamster.dance" "www.hamster.dance" ];
       logFile = "/var/log/nginx/access.log";
       logFormat = "1";
       type = "web";
