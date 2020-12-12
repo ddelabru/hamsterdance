@@ -1,6 +1,8 @@
-{% autoescape off %}# hamster.dance gemlog
+{% autoescape off %}=>../ home
 
-I write these articles on Markdown and publish them on my web site, which then also converts them to Gemtext through a custom-coded process. You may find that there are a lot of links that lead from these articles to non-Gemini protocols.
+# hamster.dance gemlog
+
+I write these articles in Markdown and publish them on my web site, which then also converts them to Gemtext through a custom-coded process; I feel that they are generally quite readable without any of the pictures included in the web version, and with inline links converted to a list at the end of each article. You may find that there are a lot of links that lead from these articles to non-Gemini protocols.
 
 {% for article in articles %}=>./gemlog.py?article={{ article.slug }} {{ article.published|date:"Y-m-d" }}: {{ article.title }}
 {% endfor %}{% endautoescape %}
