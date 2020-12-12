@@ -8,6 +8,7 @@ from django.utils.html import strip_tags
 from markdown import markdown
 from .models import Article, Tag
 
+
 def index(request, page_number=1):
     articles = Article.objects.filter(published__lte=datetime.now()).order_by(
         "-published"
@@ -57,15 +58,18 @@ def tag_view(request, tag_name="", page_number=1):
     else:
         raise Http404("Invalid page number")
 
+
 def gmi_index(request):
     articles = Article.objects.filter(published__lte=datetime.now()).order_by(
         "-published"
     )
-    return render(request, "blog/index.html", {"articles": articles})
+    return render(request, "blog/index.gmi", {"articles": articles})
+
 
 def gmi_article_view(request, slug=""):
     article = get_object_or_404(Article, slug=slug, published__lte=datetime.now())
     return render(request, "blog/article.gmi", {"article": article})
+
 
 class ArticlesFeed(Feed):
     title = "hamster.dance blog articles"

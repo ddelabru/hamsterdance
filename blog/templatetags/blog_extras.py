@@ -10,6 +10,7 @@ from markdown import markdown
 def smartypants_markdown(text):
     return markdown(text, extensions=["smarty"])
 
+
 def gemtext(input):
     html_doc = markdown.markdown(input, extensions=["smarty"])
     html_doc = bleach.clean(
