@@ -63,6 +63,9 @@ def gmi_index(request):
     )
     return render(request, "blog/index.html", {"articles": articles})
 
+def gmi_article_view(request, slug=""):
+    article = get_object_or_404(Article, slug=slug, published__lte=datetime.now())
+    return render(request, "blog/article.gmi", {"article": article})
 
 class ArticlesFeed(Feed):
     title = "hamster.dance blog articles"

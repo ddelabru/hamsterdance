@@ -11,8 +11,8 @@
           src = pkgs.fetchFromGitHub {
             owner = "ddelabru";
             repo = "hamsterdance";
-            rev = "00900e2e0a56627b9cdcc19f91d5443bb6e4e914";
-            sha256 = "1jiq9ilc7njmlsvj8861nx01pzx67637gxgv8qpiircv0njbvkqb";
+            rev = "a932c96efb0e8574d123ccbcfa00beb3a00ae11e";
+            sha256 = "07zwg6d807n61z1spjn363wfn41c537j6n930hlg19vmy504hkc0";
           };
           buildInputs = with pkgs.python3.pkgs; [ daphne django_3 ];
           propagatedBuildInputs = with pkgs.python3.pkgs; [ 
@@ -31,7 +31,7 @@
       wantedBy = [ "multi-user.target" ];
       path = [ pkgs.gettext ];
       preStart = ''
-        ${djangoEnv}/bin/manage.py migrate;
+        # ${djangoEnv}/bin/manage.py migrate;
         # ${djangoEnv}/bin/manage.py collectstatic --no-input;
       '';
       serviceConfig = {
