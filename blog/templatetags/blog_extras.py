@@ -60,8 +60,9 @@ def gemtext(input):
         pre_tag.insert_before("```\n")
         pre_tag.insert_after("```\n")
         pre_tag.unwrap()
-    output = str(soup)
+    output = soup.decode(formatter=None)
     output = re.sub(r"\n\n+", "\n\n", output)
+    output = re.sub(r"\n>\n", "\n>", output)
 
     if len(links) > 0:
         output += "\n## Links\n\n"

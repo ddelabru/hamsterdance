@@ -1,7 +1,7 @@
 {% load blog_extras %}{% autoescape off %}=>./gemlog.py hamster.dance gemlog
 
-# {{ article.title|safe }}
+# {{ article.title }}
 
 {{ article.published|date:"Y-m-d" }}
 
-{{ article.body|gemtext|safe }}{% endautoescape %}
+{{ article.body|gemtext }}{% endautoescape %}
