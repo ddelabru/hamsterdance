@@ -15,7 +15,7 @@ def gemtext(input):
     html_doc = markdown(input, extensions=["smarty"])
     html_doc = bleach.clean(
         html_doc,
-        tags=["a", "blockquote", "h1", "h2", "h3", "li", "ol", "p", "pre", "ul"],
+        tags=["a", "blockquote", "br", "h1", "h2", "h3", "li", "ol", "p", "pre", "ul"],
         protocols=bleach.ALLOWED_PROTOCOLS + ["gemini", "gopher"],
         strip=True,
     )
@@ -26,24 +26,17 @@ def gemtext(input):
         parent = a_tag.parent
         a_tag.unwrap()
         # parent.smooth()
+    for br_tag in soup.find_all("br"):
+        br_tag.decompose()
     for i in range(1, 4):
         for h_tag in soup.find_all(f"h{i}"):
             # h_tag.smooth()
             h_tag.insert_before("#" * i + " ")
             h_tag.insert_after("\n")
             h_tag.unwrap()
-    for blockquote_tag in soup.find_all("blockquote"):
-        # blockquote_tag.smooth()
-        blockquote_tag.insert_before(">")
-        blockquote_tag.insert_after("\n")
-        blockquote_tag.unwrap()
     for p_tag in soup.find_all("p"):
-        # p_tag.smooth()
-        if len("".join(list(p_tag.stripped_strings))) == 0:
-            p_tag.decompose()
-        else:
-            p_tag.insert_after("\n")
-            p_tag.unwrap()
+        p_tag.insert_after("\n")
+        p_tag.unwrap()
     for ol_tag in soup.find_all("ol"):
         for i, li_tag in enumerate(ol_tag.find_all("li"), 1):
             # li_tag.smooth()
@@ -56,13 +49,19 @@ def gemtext(input):
             li_tag.insert_before(f"* ")
             li_tag.unwrap()
         ul_tag.unwrap()
+    for blockquote_tag in soup.find_all("blockquote"):
+        quote_text = re.sub(
+            r"\n*</?blockquote>\n?", "", blockquote_tag.decode(formatter=None)
+        )
+        quote_text = re.sub(r"\n", "\n>", quote_text)
+        quote_text = "\n>" + quote_text + "\n"
+        blockquote_tag.replace_with(quote_text)
     for pre_tag in soup.find_all("pre"):
         pre_tag.insert_before("```\n")
         pre_tag.insert_after("```\n")
         pre_tag.unwrap()
     output = soup.decode(formatter=None)
     output = re.sub(r"\n\n+", "\n\n", output)
-    output = re.sub(r"\n>\n", "\n>", output)
 
     if len(links) > 0:
         output += "\n## Links\n\n"
