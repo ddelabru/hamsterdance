@@ -8,19 +8,18 @@ from django.utils.html import strip_tags
 from markdown import markdown
 from .models import Article, Tag
 
-
 def index(request, page_number=1):
     articles = Article.objects.filter(published__lte=datetime.now()).order_by(
         "-published"
     )
-    valid_number = page_number > 0 and ((page_number - 1) * 5) < len(articles)
+    valid_number = page_number > 0 and ((page_number - 1) * 20) < len(articles)
     if valid_number:
         return render(
             request,
             "blog/index.html",
             {
-                "articles": articles[5 * (page_number - 1) : 5 * page_number],
-                "last_page": (5 * page_number) >= len(articles),
+                "articles": articles[20 * (page_number - 1) : 20 * page_number],
+                "last_page": (20 * page_number) >= len(articles),
                 "next_page": page_number + 1,
                 "page_number": page_number,
                 "previous_page": page_number - 1,
@@ -41,15 +40,15 @@ def tag_view(request, tag_name="", page_number=1):
     articles = Article.objects.filter(
         tags__name=tag_name, published__lte=datetime.now()
     ).order_by("-published")
-    valid_number = page_number > 0 and ((page_number - 1) * 5) < len(articles)
+    valid_number = page_number > 0 and ((page_number - 1) * 20) < len(articles)
     if valid_number:
         return render(
             request,
             "blog/tag.html",
             {
                 "tag": tag,
-                "articles": articles[5 * (page_number - 1) : 5 * page_number],
-                "last_page": (5 * page_number) >= len(articles),
+                "articles": articles[20 * (page_number - 1) : 20 * page_number],
+                "last_page": (20 * page_number) >= len(articles),
                 "next_page": page_number + 1,
                 "page_number": page_number,
                 "previous_page": page_number - 1,
@@ -57,6 +56,12 @@ def tag_view(request, tag_name="", page_number=1):
         )
     else:
         raise Http404("Invalid page number")
+
+def gmi_index(request):
+    articles = Article.objects.filter(published__lte=datetime.now()).order_by(
+        "-published"
+    )
+    return render(request, "blog/index.html", {"articles": articles})
 
 
 class ArticlesFeed(Feed):

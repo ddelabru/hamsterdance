@@ -16,7 +16,7 @@
           };
           buildInputs = with pkgs.python3.pkgs; [ daphne django_3 ];
           propagatedBuildInputs = with pkgs.python3.pkgs; [ 
-            cffi markdown pyasn1 psycopg2 
+            beautifulsoup4 bleach cffi markdown pyasn1 psycopg2
           ];
           doCheck = false;
         };
@@ -113,7 +113,9 @@
       unitConfig.StartLimitInterval = "1min";
     };
 
-    environment.systemPackages = with pkgs; [ git mutt neofetch tldr vim ];
+    environment.systemPackages = with pkgs; [
+      git mutt neofetch python3 tldr vim
+    ];
     services.nginx.package = pkgs.nginx.override {
       modules = [ pkgs.nginxModules.ipscrub ];
     };

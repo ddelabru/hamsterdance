@@ -1,0 +1,7 @@
+=>./gemlog.py hamster.dance gemlog
+
+# {{ article.title|safe }}
+
+{{ article.published|date:"Y-m-d" }}
+
+{{ article.body|gemtext|safe }}
