@@ -11,8 +11,8 @@
           src = pkgs.fetchFromGitHub {
             owner = "ddelabru";
             repo = "hamsterdance";
-            rev = "9a172470b42ab8b18e7126d536be6a4ed4d6a386";
-            sha256 = "11dflbrlzg752pa92dvr4gj78vkhi1z200l0kapn8xhmy9m7mmba";
+            rev = "ec4d1405a9e0906253f9c23c3182fc72b6ba3f3d";
+            sha256 = "0z2mnicwbb0r6ksmry1wnl4v3n4hrhcx6dyrg52vc89s0x3z766g";
           };
           buildInputs = with pkgs.python3.pkgs; [ daphne django_3 ];
           propagatedBuildInputs = with pkgs.python3.pkgs; [ 
@@ -196,6 +196,9 @@
       docBase = "/var/gemini/";
       certPath = "/var/lib/acme/hamster.dance/cert.pem";
       keyPath = "/var/lib/acme/hamster.dance/key.pem";
+      settings = {
+        CGIPaths = [ "/var/gemini/cgi-bin/" ];
+      };
     };
     systemd.services.molly-brown.serviceConfig.SupplementaryGroups = [
       config.security.acme.certs."hamster.dance".group
