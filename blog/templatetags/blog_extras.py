@@ -12,7 +12,7 @@ def smartypants_markdown(text):
 
 
 def gemtext(input):
-    html_doc = markdown.markdown(input, extensions=["smarty"])
+    html_doc = markdown(input, extensions=["smarty"])
     html_doc = bleach.clean(
         html_doc,
         tags=["a", "blockquote", "h1", "h2", "h3", "li", "ol", "p", "pre", "ul"],
@@ -73,3 +73,4 @@ def gemtext(input):
 
 register = template.Library()
 register.filter("markdown", stringfilter(smartypants_markdown))
+register.filter("gemtext", stringfilter(gemtext))

@@ -1,4 +1,4 @@
-=>./gemlog.py hamster.dance gemlog
+{% load blog_extras %}=>./gemlog.py hamster.dance gemlog
 
 # {{ article.title|safe }}
 
