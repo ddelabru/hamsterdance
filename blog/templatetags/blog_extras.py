@@ -26,8 +26,6 @@ def gemtext(input):
         parent = a_tag.parent
         a_tag.unwrap()
         # parent.smooth()
-    for br_tag in soup.find_all("br"):
-        br_tag.decompose()
     for i in range(1, 4):
         for h_tag in soup.find_all(f"h{i}"):
             # h_tag.smooth()
@@ -35,8 +33,14 @@ def gemtext(input):
             h_tag.insert_after("\n")
             h_tag.unwrap()
     for p_tag in soup.find_all("p"):
-        p_tag.insert_after("\n")
-        p_tag.unwrap()
+        p_text = p_tag.decode(formatter=None).strip()
+        p_text = re.sub(r"\n", " ", p_text)
+        p_soup = BeautifulSoup(p_text, "html.parser")
+        for br_tag in p_soup.find_all("br"):
+            br_tag.replace_with("\n")
+        p_soup.p.insert_after("\n")
+        p_soup.p.unwrap()
+        p_tag.replace_with(p_soup.decode(formatter=None))
     for ol_tag in soup.find_all("ol"):
         for i, li_tag in enumerate(ol_tag.find_all("li"), 1):
             # li_tag.smooth()
