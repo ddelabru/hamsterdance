@@ -11,8 +11,8 @@
           src = pkgs.fetchFromGitHub {
             owner = "ddelabru";
             repo = "hamsterdance";
-            rev = "5fac2bc397f57245e68cf40a432e7cd34d35c70d";
-            sha256 = "0lv7mci92bqmy0g0hycr24wc9rxf37nwjh3ibpgdbaya3baqz119";
+            rev = "bf7d289170d434828a00ae012fb7836edcdd87e8";
+            sha256 = "1fw4vvcibqw3m1pc4ddj114w5m2cdspqiiq9akffzszs4bb0raqs";
           };
           buildInputs = with pkgs.python3.pkgs; [ daphne django_3 ];
           propagatedBuildInputs = with pkgs.python3.pkgs; [ 
@@ -24,15 +24,21 @@
         pkgs.python3.withPackages (
           ps: with ps; [daphne django_3 hamsterdance]
         );
+      vars = import ./vars.nix;
     in {
       description = "hamster.dance Django application";
-      environment = import ./vars.nix;
+      environment = vars;
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
       path = [ pkgs.gettext ];
       preStart = ''
-        # ${djangoEnv}/bin/manage.py migrate;
-        # ${djangoEnv}/bin/manage.py collectstatic --no-input;
+        ${pkgs.bash}/bin/bash -c '
+          export DJANGO_SECRET_KEY="${vars.DJANGO_SECRET_KEY}"
+          export DJANOG_PASSWORD="${vars.DJANGO_PASSWORD}"
+          export DJANGO_DEBUG="${vars.DJANGO_DEBUG}"
+          ${djangoEnv}/bin/manage.py migrate
+          # ${djangoEnv}/bin/manage.py collectstatic --no-input
+        ';
       '';
       serviceConfig = {
         ExecStart = ''${djangoEnv}/bin/daphne \
