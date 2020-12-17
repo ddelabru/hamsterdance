@@ -14,7 +14,7 @@ def index(request):
 def submit(request):
     if (
         request.method == "POST"
-        and request.POST.get("spam", 1) == 0
+        and request.POST.get("spam", "1") == "0"
         and request.POST.get("message")
     ):
         Entry.objects.create(
