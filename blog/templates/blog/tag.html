@@ -5,20 +5,18 @@
     <meta charset="utf-8" />
     <link href="/lunasspecto.css" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>"{{ tag.name }}"&mdash;hamster.dance blog</title>
+    <title>{{ tag.name }}&mdash;hamster.dance blog</title>
   </head>
   <body>
     <h1>hamster.dance blog articles tagged "{{ tag.name|escape }}"</h1>
     {% for article in articles %}
-    <hr />
     <a href="{% url 'blog:article' article.slug %}">
       <h2>{{ article.title|safe }}</h2>
     </a>
     <p><em>
-      Published {{ article.published|date:"j M Y" }},
-      last modified {{ article.modified|date:"j M Y" }}
+      Published {{ article.published|date:"j M Y" }}
     </em></p>
-    {{ article.body|markdown|safe }}
+    <p>{{ article.description }}</p>
     {% endfor %}
     <footer>
       <hr />

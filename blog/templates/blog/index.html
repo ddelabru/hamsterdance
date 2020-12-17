@@ -11,7 +11,6 @@
   <body>
     <h1>hamster.dance blog</h1>
     {% for article in articles %}
-    <hr />
     <a href="{% url 'blog:article' article.slug %}">
       <h2>{{ article.title|safe }}</h2>
     </a>
