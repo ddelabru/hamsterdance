@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Article, Tag
+from .models import Article, Comment, Tag
 
 
 class ArticleAdmin(admin.ModelAdmin):
@@ -12,5 +12,11 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ("name",)
 
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ("article", "created")
+    ordering = ("-created",)
+
+
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(Tag, TagAdmin)
+admin.site.register(Comment, CommentAdmin)

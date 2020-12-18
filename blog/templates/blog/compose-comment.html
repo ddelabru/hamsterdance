@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link href="/lunasspecto.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Commenting on: {{ article.title }}&mdash;hamster.dance blog</title>
+  </head>
+  <body>
+    <h1>
+        Commenting on article:
+        <a href="{% url 'blog:article' article.slug %}">{{ article.title|safe }}</a>
+    </h1>
+    <p>
+      Submit a comment using the form below. Please be very careful to choose the
+      correct response from the "spam" dropdown menu below before submitting; otherwise
+      your comment will be automatically discarded. All comments are subject to manual
+      approval before they are published. Full use of
+      <a href="https://www.markdownguide.org/basic-syntax/">Markdown</a> is permitted;
+      however, your comments may be rejected or edited before publication if your
+      formatting is deemed unreasonable. Criticism made in good faith is encouraged.
+      Please reach out to 
+      <a href="mailto:lunasspecto@hamster.dance">lunasspecto@hamster.dance</a> for any
+      discussions you wouldn't want published on this web site.
+    </p>
+    <form action="{% url 'blog:submit-comment' article.slug %}" method="post">
+      {% csrf_token %}
+      <label for="body-input">Comment:</label>
+      <br />
+      <textarea
+        id="body-input"
+        name="body"
+        minlength="1"
+        maxlength="5096"
+        required="true"
+      ></textarea>
+      <br />
+      <label for="name-input">Name (optional):</label>
+      <br />
+      <input
+        type="text"
+        id="name-input"
+        name="name"
+        maxlength="256"
+      />
+      <br />
+      <label for="spam-select">
+          How much spam is in your comment?
+      </label>
+      <br />
+      <select id="spam-select" name="spam">
+        <option value="1">well, it hasn't got MUCH spam in it</option>
+        <option value="2">spam, eggs, bacon &amp; spam</option>
+        <option value="0">absolutely zero spam</option>
+        <option value="3">spam, egg, spam, spam, bacon &amp; spam</option>
+        <option value="4">spam spam spam spam spam spam spam spam</option>
+      </select>
+      <br />
+      <input type="submit" value="Submit comment" />
+    </form>
+    <hr />
+    <a href="/">home</a> &gt; <a href="{% url 'blog:index' %}">blog</a> &gt;
+    <a href="{% url 'blog:article' article.slug %}">{{ article.title }}</a>
+  </body>
+</html>

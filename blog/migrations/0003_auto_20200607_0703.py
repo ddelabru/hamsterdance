@@ -11,8 +11,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name="article",
-            name="published",
-            field=models.DateTimeField(),
+            model_name="article", name="published", field=models.DateTimeField(),
         ),
     ]

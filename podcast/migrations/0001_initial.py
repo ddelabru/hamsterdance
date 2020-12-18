@@ -31,8 +31,6 @@ class Migration(migrations.Migration):
                 ("slug", models.SlugField(max_length=32, unique=True)),
                 ("transcript", models.TextField()),
             ],
-            options={
-                "ordering": ("-season", "-number"),
-            },
+            options={"ordering": ("-season", "-number"),},
         ),
     ]

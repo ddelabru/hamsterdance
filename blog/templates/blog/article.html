@@ -14,12 +14,30 @@
       last modified {{ article.modified|date:"j M Y" }}
     </em></p>
     {{ article.body|markdown|safe }}
+    <hr />
     <p><em>
       Tags:
       {% for tag in tags %}
       <a href="{% url 'blog:tag' tag.name %}" rel="tag">{{tag.name}}</a>
       {% endfor %}
     </em></p>
+    <p>
+      There {% if comments_total == 1 %}is{% else %}are{% endif %}
+      {% if comments_total == 0 %}no{% else %}{{ comments_total }}{% endif %}
+      comment{% if comments_total != 1 %}s{% endif %} on this article.
+    </p>
+    <p><a href="{% url 'blog:compose-comment' article.slug %}">
+      Leave a comment
+    </a></p>
+    {% for comment in comments %}
+    <div class="comment">
+      {{ comment.body|markdown|safe }}
+    <p><em>
+      Comment left by {{ entry.name|escape|default:"anonymous" }} on
+      {{ comment.created|date:"j M Y" }}
+    </em></p>
+    </div>
+    {% endfor %}
     <footer>
       <hr />
       <a href="/">home</a>

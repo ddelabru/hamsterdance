@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link href="/lunasspecto.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>hamster.dance comment submission</title>
+  </head>
+  <body>
+    <p>
+      Something went wrong with your comment submission. You may not have chosen the
+      correct "spam" menu item, or something else might have gone wrong with the form.
+    </p>
+    <p><a href="{% url 'blog:compose-comment' article.slug %}">Try again</a></p>
+  </body>
+</html>
