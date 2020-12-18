@@ -36,7 +36,9 @@ def index(request, page_number=1):
 
 def article_view(request, slug=""):
     article = get_object_or_404(Article, slug=slug, published__lte=datetime.now())
-    comments = Comment.objects.filter(approved=True, article=article)
+    comments = Comment.objects.filter(approved=True, article=article).order_by(
+        "created"
+    )
     comments_total = len(comments)
     tags = article.tags.all()
     return render(
