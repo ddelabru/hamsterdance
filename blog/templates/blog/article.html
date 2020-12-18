@@ -33,7 +33,7 @@
     <div class="comment">
       {{ comment.body|markdown|safe }}
     <p><em>
-      Comment left by {{ entry.name|escape|default:"anonymous" }} on
+      Comment left by {{ comment.name|escape|default:"anonymous" }} on
       {{ comment.created|date:"j M Y" }}
     </em></p>
     </div>

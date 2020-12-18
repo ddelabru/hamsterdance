@@ -55,7 +55,7 @@ def email_on_comment(sender, instance, created, **kwargs):
     try:
         with smtplib.SMTP("localhost", 1025 if settings.DEBUG else 25) as smtp:
             smtp.send_message(msg)
-    except smtplib.SMTPException:
+    except Exception:
         log = logging.getLogger()
         log.warning(
             "Unable to send email notification of comment creation", exc_info=True
