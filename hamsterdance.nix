@@ -11,8 +11,8 @@
           src = pkgs.fetchFromGitHub {
             owner = "ddelabru";
             repo = "hamsterdance";
-            rev = "ef0a6cebca017d05517f66ec7e3369d0820f505e";
-            sha256 = "1miydq8d5jwgkwah6f2bg95nh65r936i7bg11mp9ib340d6l2bnq";
+            rev = "f3fed0ea1815d9ea4809b44bab2554c77a11a886";
+            sha256 = "196abqfzjkqb24lfydca3n1nmsv3i21ka66zkn2ki74zr8vwv31a";
           };
           buildInputs = with pkgs.python3.pkgs; [ daphne django_3 ];
           propagatedBuildInputs = with pkgs.python3.pkgs; [ 
@@ -72,13 +72,13 @@
         inherit pkgs;
       };
     in let
-      bibliogram = nodePackages."bibliogram-https://git.sr.ht/~cadence/bibliogram/archive/3af4b2f23797ae2a343097dc32557a5123105cea.tar.gz".override {
+      bibliogram = nodePackages."bibliogram-https://git.sr.ht/~cadence/bibliogram/archive/544a825b2b401edba1797370163e9868778e72f9.tar.gz".override {
         name = "bibliogram";
         version = "1.0.0";
         src = pkgs.fetchgit {
           url = "https://git.sr.ht/~cadence/bibliogram";
-          rev = "3af4b2f23797ae2a343097dc32557a5123105cea";
-          sha256 = "0lnn648h96w103m4zizns3sn81zzkjj80gnlbmbyw1gkghmpn495";
+          rev = "544a825b2b401edba1797370163e9868778e72f9";
+          sha256 = "1j5s9s8cbcphff2c9gzcgklwwa28632p0xj1wip62vhlw7g61d35";
         };
         nativeBuildInputs = [pkgs.coreutils pkgs.makeWrapper];
         postInstall = let
