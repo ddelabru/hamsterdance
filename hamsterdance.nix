@@ -284,11 +284,11 @@
       openssh.authorizedKeys.keys = [
         "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCb4qUnbFGpARMrotq1xTMw3HeuPQxllFsqxaB3kRorJAISDUsEhNwEopkgvmj8QiRKowu9Znt2zMl1ZQDWiyPTZ2vlJNqvHGVUa6DDe8QqtGxFQHlxEIL6QWXGQrjFRsGKY9NjXPuAGM7lpycgf2eLEEEHf640URJbLqumBOH5E+I2vMIsd7H9a13xLiXOGq4FN87SzU2YWutrqBp40SgZ6ebEp6ETcfoj+kGgTbm7iSwzTgzBYme4Sr8thMwd9SjTIZ2y6hoombl+ZFdHJWgVWd0LXkYKwKXnwFNP7d/QfnFLrFYvkh4l6Hi/7EQC1SIDTDuZTZBG11wBPuPkPJF0iCtZ5GH8nxHEqjLkHqOamBiZ/RB8ijg/X0E6l6Jt1+ywUflijwcdxlg6joDYSUxeXdPEOeTHZFvpdlbyDOvwNMMubLowEFRPMJEf2Z2TkPZRPea3+HMs/hzX0Y1ayBRlBQXJxCsbOmA8vHhKRTb4IrjBRmzccMEPEuHQn3PU/WE= lunasspecto@slaptop"
         "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDAnXdJNjVdT3MOhmx1OYJyJpT9GU6E2bJQQ4yoil39CrO+a3q7j/lEUpoXZWsH+npxb4XU1S7BLZE28fb7mkbk= ddelabru@ddelabru-t490s"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMFc1sNfQxETz8L7lf7ojb3iF2nFOgx91D8uGDTkKFzo JuiceSSH"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA+Dv8QB2aCAlPodGKpSG73XCE+ipzI+sYGp9cxnT3YJ JuiceSSH"
       ];
     };
-    users.users.django = {};
-    users.users.bibliogram = {};
+    users.users.django = { isSystemUser = true; };
+    users.users.bibliogram = { isSystemUser = true; };
 
     programs.zsh.enable = true;
     users.users.spiritomb = {
