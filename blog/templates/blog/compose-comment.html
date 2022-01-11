@@ -60,6 +60,6 @@
     </form>
     <hr />
     <a href="/">home</a> &gt; <a href="{% url 'blog:index' %}">blog</a> &gt;
-    <a href="{% url 'blog:article' article.slug %}">{{ article.title }}</a>
+    <a href="{% url 'blog:article' article.slug %}">{{ article.title|safe }}</a>
   </body>
 </html>
